@@ -1,0 +1,30 @@
+Brother Charger 11 Typewriter Sample Pack
+Created by Subtersonic, 2012
+
+Specifications
+Make: Brother
+Model: Charger 11
+Made in Japan
+1960's era typewriter, powder blue steel case
+
+
+I have sampled numerous mechanical sounds this typewriter produces during operation. The sample pack 
+can be used for foley, sound fx, musical composition, and anything else you may think of. They were 
+recorded dry as mono 16 bit 96khz .wav files. 
+
+I did not record multiple velocity levels because the machine does
+not typically have a wide dynamic range in normal operation. The pack includes several "press" and 
+"release" samples. This reproduces the sound a typewriter key makes when it is pressed, and the 
+other sound it makes when released, creating rhythmic flexibility. It also includes those sounds 
+combined together into 1 sample.
+
+I have created a mapping of the sounds for ShortCircuit Sampler ver 1.1.2
+The range is from C2 to C5. Some are mapped to press and release, some to forward shot, and some looped.
+The sample names should be pretty self explanatory. I have included 3 rough rhythmic loops as a
+bonus.
+
+This sample pack is provided for free, without any guarantee.
+You are free to use these samples for your own works, including commercial. You are not allowed to sell these samples for money.
+If you want to redistribute them, please CONTACT ME FIRST. A shoutout for works using them is also greatly appreciated.
+
+http://subtersonic.weebly.com/index.html
