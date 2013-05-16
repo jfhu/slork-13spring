@@ -46,6 +46,34 @@ fun string ascii_to_str(int ascii) {
     return ascii_map[ascii];
 }
 
+/* Play typewriter keystroke */
+200.0 => float base_freq;
+fun void play_keystroke(int ascii) {
+    ascii => Std.mtof => float freq;
+    freq / base_freq => float rate;
+    SndBuf buf => dac;
+    "sample/typewriter/unknown_1/key.wav" => buf.read;
+    rate => buf.rate;
+    0 => buf.pos;
+    buf.length() => now;
+}
+
+fun void play_forward() {
+    SndBuf buf => dac;
+    "sample/typewriter/unknown_1/forward.wav" => buf.read;
+    0 => buf.pos;
+    5 => buf.gain;
+    buf.length() => now;
+}
+
+fun void play_space() {
+    SndBuf buf => dac;
+    "sample/typewriter/unknown_1/space-bar.wav" => buf.read;
+    45000 => buf.pos;
+    5 => buf.gain;
+    buf.length() => now;
+}
+
 /* keyboard event loop */
 fun void keyboard_loop() {
     while (true) {
@@ -58,6 +86,17 @@ fun void keyboard_loop() {
                 // <<< ascii_to_str(hid_msg.ascii) >>>;
                 cid => osc_send.addInt;
                 ascii_to_str(hid_msg.ascii) => osc_send.addString;
+
+                /* Play sound with different keys */
+                if (hid_msg.ascii == 10) {
+                    // Enter Key
+                    spork ~ play_forward();
+                } else if (hid_msg.ascii == 32) {
+                    // Space Key
+                    spork ~ play_space();
+                } else {
+                    spork ~ play_keystroke(hid_msg.ascii);
+                }
             }
         }
     }
