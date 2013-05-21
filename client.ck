@@ -68,9 +68,20 @@ fun void play_keystroke(int ascii) {
     buf.length() => now;
 }
 
-fun void play_forward() {
+[
+    "camera-shutter-click-07.wav",
+    "car-beeping-2.wav",
+    "clong-2.wav",
+    "glass-clink-3.wav",
+    "hammering-2.wav",
+    "phone-hang-up-2b.wav",
+    "pot-lid-1.wav",
+    "rotary-phone-1-nr8.wav"
+] @=> string enter_sound[];
+cid % enter_sound.cap() => int enter_sound_indx;
+fun void play_enter() {
     SndBuf buf => dac;
-    "sample/typewriter/unknown_1/forward.wav" => buf.read;
+    "sample/enter_key/" + enter_sound[enter_sound_indx] => buf.read;
     0 => buf.pos;
     5 => buf.gain;
     buf.length() => now;
@@ -98,10 +109,19 @@ fun void keyboard_loop() {
                 cid => osc_send.addInt;
                 ascii_to_str(hid_msg.ascii) => osc_send.addString;
 
+                /* number keys control which enter key sound to play */
+                if (hid_msg.ascii <= 57 && hid_msg.ascii >= 48) {
+                    hid_msg.ascii => int k;
+                    if (k == 48) 58 => k;
+                    /* 0 == 48, 9 == 57 */
+                    ((k - 49) + enter_sound.cap()) % enter_sound.cap() => enter_sound_indx;
+                    <<< "Switched to sound: ", enter_sound_indx >>>;
+                }
+
                 /* Play sound with different keys */
                 if (hid_msg.ascii == 10) {
                     // Enter Key
-                    spork ~ play_forward();
+                    spork ~ play_enter();
                 } else if (hid_msg.ascii == 32) {
                     // Space Key
                     spork ~ play_space();
