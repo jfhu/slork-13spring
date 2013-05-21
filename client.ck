@@ -1,9 +1,11 @@
 // client.ck
 //
 // usage:
-// chuck client.ck[:cliend_id[:server host[:port]]]
-// default server: localhost:6449
+// chuck client.ck[:client_id[:server host[:port]]]
+// default server: localhost:51000
 // client id will be randomized if not given
+
+"localhost" => string defaultServer;
 
 /* prepare client id */
 200 => int MAX_CLIENT_ID;
@@ -13,6 +15,7 @@ if ( !me.args() ) {
 } else {
     me.arg(0) => Std.atoi => cid;
 }
+<<< "Client ID: ", cid >>>;
 
 /* prepare keyboard */
 0 => int keyboard_device_num;
@@ -22,13 +25,20 @@ if ( hid.openKeyboard( keyboard_device_num ) == 0) me.exit();
 <<< "Keyboard: ", hid.name() >>>;
 
 
-/* prepare OSC */
-"localhost" => string hostname;
-6449 => int port;
+/* prepare OSC send */
+defaultServer => string hostname;
+51000 => int port;
 if ( me.args() > 1 ) me.arg(1) => hostname;
 if ( me.args() > 2 ) me.arg(2) => Std.atoi => port;
 OscSend osc_send;
 osc_send.setHost( hostname, port );
+<<< "Connecting to server ", hostname, ":", port >>>;
+
+/* prepare OSC recv */
+OscRecv osc_recv;
+50000 + cid => osc_recv.port;
+osc_recv.listen();
+<<< "Listening on port: ", 50000+cid >>>;
 
 /* ascii (0-127) -> string mapping of printable chars */
 [
@@ -75,6 +85,7 @@ fun void play_space() {
 }
 
 /* keyboard event loop */
+/* sends keystrokes to server for printing */
 fun void keyboard_loop() {
     while (true) {
         hid => now;
@@ -103,6 +114,23 @@ fun void keyboard_loop() {
 }
 spork ~ keyboard_loop();
 
-<<< "Client started with cid = ", cid >>>;
+/* osc event loop */
+/* receives characters from server and play the sound */
+fun void osc_recv_loop() {
+    osc_recv.event("play, i") @=> OscEvent oe;
+    int buf;
+    while ( true ) {
+        oe => now;
+        while ( oe.nextMsg() != 0 ) {
+            oe.getInt() => buf;
+            <<< "Received: ", buf >>>;
+            spork ~ play_keystroke(buf);
+        }
+    }
+}
+spork ~ osc_recv_loop();
+
+
+<<< "Client started.", "" >>>;
 while (true) 5::minute => now;
 

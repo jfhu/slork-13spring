@@ -1,12 +1,13 @@
-// server.ck
+// server_print.ck
+// Responsible for printing sentences sent by clients.
 //
 // usage:
 // chuck server.ck[:port]
-// default port: 6449
+// default port: 51000
 
 /* prepare OSC */
 OscRecv recv;
-6449 => recv.port;
+51000 => recv.port;
 if ( me.args() ) me.arg(0) => Std.atoi => recv.port;
 recv.listen();
 
@@ -27,7 +28,7 @@ fun void osc_loop() {
             oe.getString() => buf;
             if (buf == "\n") { // Enter key pressed
                 // TODO: print the sentence[cid] here with a system() call
-                <<< "From client ", cid, ": ", sentence[cid] >>>;
+                <<< "[Client ", cid, "]: ", sentence[cid] >>>;
                 "" => sentence[cid];
             } else {
                 sentence[cid] + buf => sentence[cid];
