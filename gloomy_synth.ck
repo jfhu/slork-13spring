@@ -1,7 +1,3 @@
-// Slork 2013
-// Week 2 ChucK Tutorial
-// Keyboard control + ADSR envelopes
-// Spencer Salazar - spencer@ccrma.stanford.edu
 
 // setup our audio
 NRev reverb => dac;
