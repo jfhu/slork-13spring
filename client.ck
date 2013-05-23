@@ -83,18 +83,25 @@ osc_recv.listen();
 /* Play typewriter keystroke */
 200.0 => float base_freq;
 [
-    "sample/typewriter/unknown_1/key.wav"
+    "sample/typewriter/unknown_1/key.wav",
+    "sample/typewriter/unknown_1/key.wav",
+    "sample/typewriter/unknown_1/key.wav",
+    "sample/water-droplet-1.wav",
+    "sample/water-droplet-1.wav",
+    "sample/clock-ticking-3.wav"
 ] @=> string key_sounds[];
 Math.random2(0, key_sounds.cap() - 1) => int key_sound_indx;
 <<< "Using key sound", key_sound_indx >>>;
 fun void play_keystroke(int ascii) {
     ascii => Std.mtof => float freq;
     freq / base_freq => float rate;
-    SndBuf buf => dac;
+    SndBuf buf => NRev r => dac;
+    0.1 => r.mix;
     key_sounds[key_sound_indx] => buf.read;
     rate => buf.rate;
     0 => buf.pos;
-    buf.length() => now;
+    0.6 => buf.gain;
+    buf.length() * 2 => now;
 }
 
 [
