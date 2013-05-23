@@ -25,21 +25,6 @@ if ( hid.openKeyboard( keyboard_device_num ) == 0) me.exit();
 <<< "Keyboard: ", hid.name() >>>;
 
 
-/* prepare OSC send */
-defaultServer => string hostname;
-51000 => int port;
-if ( me.args() > 1 ) me.arg(1) => hostname;
-if ( me.args() > 2 ) me.arg(2) => Std.atoi => port;
-OscSend osc_send;
-osc_send.setHost( hostname, port );
-<<< "Connecting to server ", hostname, ":", port >>>;
-
-/* prepare OSC recv */
-OscRecv osc_recv;
-50000 + cid => osc_recv.port;
-osc_recv.listen();
-<<< "Listening on port: ", 50000+cid >>>;
-
 /* ascii (0-127) -> string mapping of printable chars */
 [
     "", "", "", "", "", "", "", "", "", "\t", "\n", "", "", "", "", "", // 0-15
@@ -55,6 +40,45 @@ osc_recv.listen();
 fun string ascii_to_str(int ascii) {
     return ascii_map[ascii];
 }
+
+
+/* prepare OSC send */
+defaultServer => string hostname;
+51000 => int port;
+if ( me.args() > 1 ) me.arg(1) => hostname;
+if ( me.args() > 2 ) me.arg(2) => Std.atoi => port;
+OscSend osc_send;
+osc_send.setHost( hostname, port );
+<<< "Connecting to server ", hostname, ":", port >>>;
+
+/* Set the client name */
+<<< "Please", "enter a name:" >>>;
+"" => string client_name;
+0 => int should_break;
+while (true) {
+    if (should_break) break;
+    hid => now;
+    while (hid.recv(hid_msg)) {
+        if (hid_msg.isButtonDown()) {
+            if (hid_msg.ascii == 10) {
+                <<< "Sending", client_name >>>;
+                osc_send.startMsg("name", "i s");
+                cid => osc_send.addInt;
+                client_name => osc_send.addString;
+                1 => should_break;
+                break;
+            }
+            client_name + ascii_to_str(hid_msg.ascii) => client_name;
+        }
+    }
+}
+<<< "...","..." >>>;
+
+/* prepare OSC recv */
+OscRecv osc_recv;
+50000 + cid => osc_recv.port;
+osc_recv.listen();
+<<< "Listening on port: ", 50000+cid >>>;
 
 /* Play typewriter keystroke */
 200.0 => float base_freq;
