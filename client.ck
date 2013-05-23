@@ -82,11 +82,16 @@ osc_recv.listen();
 
 /* Play typewriter keystroke */
 200.0 => float base_freq;
+[
+    "sample/typewriter/unknown_1/key.wav"
+] @=> string key_sounds[];
+Math.random2(0, key_sounds.cap() - 1) => int key_sound_indx;
+<<< "Using key sound", key_sound_indx >>>;
 fun void play_keystroke(int ascii) {
     ascii => Std.mtof => float freq;
     freq / base_freq => float rate;
     SndBuf buf => dac;
-    "sample/typewriter/unknown_1/key.wav" => buf.read;
+    key_sounds[key_sound_indx] => buf.read;
     rate => buf.rate;
     0 => buf.pos;
     buf.length() => now;
@@ -139,7 +144,7 @@ fun void keyboard_loop() {
                     if (k == 48) 58 => k;
                     /* 0 == 48, 9 == 57 */
                     ((k - 49) + enter_sound.cap()) % enter_sound.cap() => enter_sound_indx;
-                    <<< "Switched to sound: ", enter_sound_indx >>>;
+                    <<< "Switched to enter key sound: ", enter_sound_indx >>>;
                 }
 
                 /* Play sound with different keys */
