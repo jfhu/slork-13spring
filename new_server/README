@@ -1,0 +1,13 @@
+# How to run the server
+
+1. install node.js
+2. run ```npm install``
+3. run the server with node app.js
+
+Server should be listeining on 8000 by default...
+
+
+# How to use
+
+Names begin with '_' will be highlighted.
+

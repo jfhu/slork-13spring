@@ -1,0 +1,8 @@
+# Node Modules
+node_modules
+
+# DS Store
+.DS_Store
+
+# License file
+LICENSE-MIT
