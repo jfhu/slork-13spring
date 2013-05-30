@@ -29,6 +29,7 @@ fun void plop(float freq)
 {
     // setup audio
     BlitSaw s => LPF filter => ADSR envelope => NRev rev=> reverb;
+    .05 => s.gain; 
     600 => filter.freq;
     500 => filter.Q;
     // configurelngrageous fortune. or btend themeklfvjszf

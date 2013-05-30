@@ -46,17 +46,6 @@ fun string ascii_to_str(int ascii) {
     return ascii_map[ascii];
 }
 
-
-0 => int instrument_indx;
-
-[
-    ["sample/crickets/cricket_high.wav", "sample/crickets/cricket_low.wav"],
-    ["sample/rain_thunder/rain_high.wav", "sample/rain_thunder/rain_low.wav"],
-    ["sample/water/water_droplet_2.wav"],
-    ["sample/chimes/chimes_double.wav", "sample/chimes/chimes_single.wav", "sample/chimes/chimes_short_asc.wav"],
-    ["sample/waves/ocean_recede.wav"]
-] @=> string keystroke[][];
-
 /* Play typewriter keystroke */
 200.0 => float base_freq;
 fun void play_keystroke(int ascii) {
@@ -64,46 +53,30 @@ fun void play_keystroke(int ascii) {
     freq / base_freq => float rate;
     SndBuf buf => ADSR env => dac;
     env.set(30::ms, 50::ms, .1, 50::ms);
-
-    Math.random2(0, keystroke[instrument_indx].cap()-1) => int rand;
-    keystroke[instrument_indx][rand] => buf.read;
+    Math.random2(0,1) => int rand;
+    if (rand == 0)
+        "sample/rain_thunder/rain_high.wav" => buf.read;
+    else
+        "sample/rain_thunder/rain_low.wav" => buf.read;
     //rate => buf.rate;
     5 => buf.gain;
     0 => buf.pos;
     buf.length() => now;
 }
 
-[
-    ["sample/crickets/cicada.wav"],
-    ["sample/rain_thunder/thunder_high.wav"],
-    ["sample/water/water_droplet_2.wav"],
-    ["sample/chimes/chimes_multiple_same.wav", "sample/chimes/chimes_down_up.wav"],
-    ["sample/waves/ocean_wave.wav"]
-] @=> string forward[][];
 fun void play_forward() {
     SndBuf buf => ADSR env => dac;
     env.set(30::ms, 50::ms, .1, 50::ms);
-
-    Math.random2(0, keystroke[instrument_indx].cap()-1) => int rand;
-    forward[instrument_indx][rand] => buf.read;
+    "sample/rain_thunder/thunder_high.wav" => buf.read;
     0 => buf.pos;
     5 => buf.gain;
     buf.length() => now;
 }
 
-[
-    ["sample/crickets/bat_chirp.wav"],
-    ["sample/rain_thunder/thunder_low.wav"],
-    ["sample/water/water_droplet_1.wav"],
-    ["sample/chimes/chimes_desc.wav"],
-    ["sample/waves/small_wave.wav"]
-] @=> string space[][];
 fun void play_space() {
     SndBuf buf => ADSR env => dac;
     env.set(30::ms, 50::ms, .1, 50::ms);
-
-    Math.random2(0, keystroke[instrument_indx].cap()-1) => int rand;
-    space[instrument_indx][rand] => buf.read;
+    "sample/rain_thunder/thunder_low.wav" => buf.read;
     0 => buf.pos;
     5 => buf.gain;
     buf.length() => now;
@@ -121,12 +94,6 @@ fun void keyboard_loop() {
                 // <<< ascii_to_str(hid_msg.ascii) >>>;
                 cid => osc_send.addInt;
                 ascii_to_str(hid_msg.ascii) => osc_send.addString;
-
-                /* switch sounds */
-                if (hid_msg.which >= 58 && hid_msg.which <= 63) {
-                    (hid_msg.which - 58) % keystroke.cap() => instrument_indx;
-                    <<< "Switching to instrument", instrument_indx >>>;
-                }
 
                 /* Play sound with different keys */
                 if (hid_msg.ascii == 10) {

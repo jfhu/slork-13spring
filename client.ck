@@ -5,7 +5,7 @@
 // default server: localhost:51000
 // client id will be randomized if not given
 
-"localhost" => string defaultServer;
+"chowder.local" => string defaultServer;
 
 /* prepare client id */
 200 => int MAX_CLIENT_ID;
