@@ -105,3 +105,10 @@ h1 {
   background-color : #dfdfdf;
 }
 
+.btn {
+    background-color: #333;
+    color: #eee;
+    border: none;
+    min-height: 4em;
+    width: 10em;
+}

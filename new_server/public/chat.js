@@ -2,6 +2,9 @@
 (function () {
   window.Chat = {
     socket : null,
+    is_admin : false,
+    selected_clients : [],
+    client_mapping: {},
 
     initialize : function(socketURL) {
       this.socket = io.connect(socketURL);
@@ -20,6 +23,14 @@
 
       //Process any incoming messages
       this.socket.on('new', this.add);
+
+      // Admin Stuff
+      if (this.is_admin) {
+          this.socket.on('name', function(data) {
+              window.Chat.client_mapping[data.key] = data.name;
+          });
+      }
+
     },
 
     //Adds a new message to the chat.
@@ -56,12 +67,19 @@
 
     //Sends a message to the server,
     //then clears it from the textarea
-    send : function() {
-      this.socket.emit('msg', {
-/*        to: ['aaa'], TODO */
+    send : function(msg) {
+      var obj = {
         name: $('#name').val(),
         msg: $('#message').val()
-      });
+      };
+
+      console.log(msg);
+      if (msg) obj['msg'] = msg;
+
+      if (this.is_admin && this.selected_clients.length > 0) {
+        obj['to'] = selected_clients;
+      }
+      this.socket.emit('msg', obj);
 
       $('#message').val('');
 

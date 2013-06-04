@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Chat</title>
+    <link rel="stylesheet",type="text/css" href="styles.css"/>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="jquery.1.8.2.min.js"></script>
+    <script type="text/javascript" src="chat.js"></script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>Elsinore - ADMIN -</h1>
+        <div>
+            <button class="btn" onclick="Chat.send('Instrument 1 (press F1)')">Instrument 1</button>
+            <button class="btn" onclick="Chat.send('Instrument 2 (press F2)')">Instrument 2</button>
+            <button class="btn" onclick="Chat.send('Instrument 3 (press F3)')">Instrument 3</button>
+            <button class="btn" onclick="Chat.send('Instrument 4 (press F4)')">Instrument 4</button>
+            <button class="btn" onclick="Chat.send('Instrument 5 (press F5)')">Instrument 5</button>
+        </div>
+        <div>
+            <button class="btn" onclick="Chat.send('Type Slowly')">Slow</button>
+            <button class="btn" onclick="Chat.send('Type Naturally')">Medium</button>
+            <button class="btn" onclick="Chat.send('Type Fast')">Fast</button>
+            <button class="btn" onclick="Chat.send('Type AS FAST AS YOU CAN')">Prestissimo</button>
+        </div>
+      <div id="messages" style="height: 60%"></div>
+      <div class="nic">
+        Your Name
+        <input id="name" name="name" type="text"/>
+      </div>
+      <textarea id="message"></textarea>
+      <!--<input id="send" type="submit" value="Send"/>-->
+    </div>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        Chat.is_admin = true;
+        Chat.initialize('');
+      });
+    </script>
+  </body>
+</html>
+
