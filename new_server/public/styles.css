@@ -70,12 +70,6 @@ h1 {
   font-size: 18px;
 }
 
-.private {
-    color: lightseagreen;
-}
-.private .name {
-    color: lightskyblue;
-}
 
 .highlighted {
     color: lightcoral;
@@ -84,6 +78,12 @@ h1 {
     color: lightsalmon;
 }
 
+.private {
+    color: lightseagreen;
+}
+.private .name {
+    color: lightskyblue;
+}
 
 #wrapper,
 #name,
