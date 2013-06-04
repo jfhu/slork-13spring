@@ -24,12 +24,28 @@
 
     //Adds a new message to the chat.
     add : function(data) {
-      var name = data.name || 'anonymous';
+      var name = data.name;
+
+      // if this message is not for me, ignore it
+      if ('to' in data) {
+          var localname = $('#name').val() || 'anonymous';
+          if (localname != name &&
+              $.inArray(localname, data.to) < 0) {
+                  return;
+          }
+      }
+
       var msg = $('<div class="msg"></div>');
+
+      if ('to' in data) {
+          msg.addClass('private');
+      }
+
       if (name[0] == '_') {
           msg.addClass('highlighted');
           name = name.substr(1);
       }
+
       msg.append('<span class="name">' + name + ':</span> ')
          .append('<span class="text">' + data.msg + '</span>');
 
@@ -42,6 +58,7 @@
     //then clears it from the textarea
     send : function() {
       this.socket.emit('msg', {
+/*        to: ['aaa'], TODO */
         name: $('#name').val(),
         msg: $('#message').val()
       });

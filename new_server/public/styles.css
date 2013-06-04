@@ -70,12 +70,20 @@ h1 {
   font-size: 18px;
 }
 
+.private {
+    color: lightseagreen;
+}
+.private .name {
+    color: lightskyblue;
+}
+
 .highlighted {
-    color: orange;
+    color: lightcoral;
 }
 .highlighted .name {
-    color: red;
+    color: lightsalmon;
 }
+
 
 #wrapper,
 #name,
