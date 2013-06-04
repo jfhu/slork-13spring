@@ -76,8 +76,22 @@
       console.log(msg);
       if (msg) obj['msg'] = msg;
 
+      // TODO: temporary
+      if (this.is_admin) {
+        var str = $('#to').val();
+        str = str.split(',');
+        for (var i = 0; i < str.length; i++) {
+            str[i] = $.trim(str[i]);
+        }
+        str = str.filter(function(d){return d!==''});
+        console.log(str);
+        if (str.length > 0) {
+            this.selected_clients = str;
+        }
+      }
+
       if (this.is_admin && this.selected_clients.length > 0) {
-        obj['to'] = selected_clients;
+        obj['to'] = this.selected_clients;
       }
       this.socket.emit('msg', obj);
 
