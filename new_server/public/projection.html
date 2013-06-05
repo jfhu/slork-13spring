@@ -8,20 +8,21 @@
     <script type="text/javascript" src="chat.js"></script>
   </head>
   <body>
-    <div id="wrapper">
+    <div id="wrapper" class="container_12">
       <h1>Elsinore</h1>
-      <div id="messages"></div>
-      <div class="nic">
-        Your Name
-        <input id="name" name="name" type="text"/>
-        Act
-        <input id="act" name="act" type="text"/>
+      <div id="messages_1" class="messages">
+        <p>ACT 1</p>
       </div>
-      <textarea id="message"></textarea>
-      <!--<input id="send" type="submit" value="Send"/>-->
+      <div id="messages_2" class="messages">
+        <p>ACT 2</p>
+      </div>
+      <div id="messages_3" class="messages">
+        <p>ACT 3</p>
+      </div>
     </div>
     <script type="text/javascript">
       $(document).ready(function() {
+        Chat.is_projected = true;
         Chat.initialize('');
       });
     </script>

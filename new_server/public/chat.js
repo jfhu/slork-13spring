@@ -3,6 +3,7 @@
   window.Chat = {
     socket : null,
     is_admin : false,
+    is_projected : false,
     selected_clients : [],
     client_mapping: {},
 
@@ -46,9 +47,17 @@
           }
       }
 
+      if ('private' in data && window.Chat.is_projected) {
+          return;
+      }
+
+      if (!window.Chat.is_projected && data.act != $('#act').val()) {
+          return;
+      }
+
       var msg = $('<div class="msg"></div>');
 
-      if ('to' in data) {
+      if ('to' in data || 'private' in data) {
           msg.addClass('private');
       }
 
@@ -60,9 +69,18 @@
       msg.append('<span class="name">' + name + ':</span> ')
          .append('<span class="text">' + data.msg + '</span>');
 
-      $('#messages').append(msg);
-      $('#messages')
-        .animate({scrollTop: $('#messages').prop('scrollHeight')}, 100);
+      if (!window.Chat.is_projected) {
+          $('#messages').append(msg);
+          $('#messages')
+            .animate({scrollTop: $('#messages').prop('scrollHeight')}, 100);
+      } else {
+          if ('private' in data || 'to' in data) return;
+          var id = '#messages_' + data.act;
+          console.log(id);
+          $(id).append(msg);
+          $(id)
+            .animate({scrollTop: $(id).prop('scrollHeight')}, 100);
+      }
     },
 
     //Sends a message to the server,
@@ -70,7 +88,8 @@
     send : function(msg) {
       var obj = {
         name: $('#name').val(),
-        msg: $('#message').val()
+        msg: $('#message').val(),
+        act: $('#act').val()
       };
 
       console.log(msg);
@@ -90,6 +109,9 @@
 
       if (this.is_admin && this.selected_clients.length > 0) {
         obj['to'] = this.selected_clients;
+      }
+      if (this.is_admin && $('#private').attr('checked')) {
+          obj['private'] = true;
       }
       this.socket.emit('msg', obj);
 
